@@ -2,6 +2,8 @@
     "name": "api_adi_2018",
     "version": "1.0.0",
     "dependencies": {
-        "express": "^4.16.4"
+        "express": "^4.16.4",
+        "knex": "^0.15.2",
+        "sqlite3": "^4.0.2"
     }
 }
