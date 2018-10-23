@@ -35,6 +35,14 @@ app.get("/pedidos", function(pet, resp){
 
 })
 
+app.get("/linpedidos", function(pet, resp){
+    listarLinpedidos(function(datos){
+        resp.send(datos)
+        console.log(datos)
+    })
+
+})
+
 
 //CAPA DE ACCESO A DATOS
 function listarProductos(callback) {
@@ -53,6 +61,13 @@ function listarCategorias(callback) {
 
 function listarPedidos(callback) {
     knex.select().from('pedidos')
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function listarLinpedidos(callback) {
+    knex.select().from('linpedidos')
     .then(function(datos){
       callback(datos)
     })

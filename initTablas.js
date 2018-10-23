@@ -50,7 +50,21 @@ knex.schema.hasTable('usuarios').then(function(exists) {
       return knex.schema.createTable('pedidos', function(table) {
         table.increments();
         table.integer('usuario_id').unsigned()
-        table.foreign('usuario_id').references('usuario.id');
+        table.foreign('usuario_id').references('usuarios.id');
       });
     }
   });
+
+    //TABLA LINPEDIDOS
+    knex.schema.hasTable('linpedidos').then(function(exists) {
+        if (!exists) {
+          return knex.schema.createTable('linpedidos', function(table) {
+            table.increments();
+            table.integer('cantidad');
+            table.integer('pedidos_id').unsigned()
+            table.foreign('pedidos_id').references('pedidos.id');
+            table.integer('productos_id').unsigned()
+            table.foreign('productos_id').references('productos.id');
+          });
+        }
+      });
