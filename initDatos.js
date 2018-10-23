@@ -30,5 +30,11 @@ knex('linpedidos').insert({cantidad: 1, pedidos_id: 1, productos_id: 3}).then();
 knex('linpedidos').insert({cantidad: 3, pedidos_id: 1, productos_id: 4}).then();
 
 knex('packs').insert({nombre:'Pack total', precio: 18.95}).then();
+knex('packs').insert({nombre:'Pack 2', precio: 18.95}).then();
+
+knex('prodtopacks').insert({packs_id: 1, productos_id: 1}).then();
+knex('prodtopacks').insert({packs_id: 1, productos_id: 3}).then();
+knex('prodtopacks').insert({packs_id: 1, productos_id: 4}).then();
+
 
 

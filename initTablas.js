@@ -79,3 +79,15 @@ knex.schema.hasTable('packs').then(function (exists) {
         });
     }
 });
+
+//RELACION PRODUCTOS Y PACKS
+knex.schema.hasTable('prodtopacks').then(function (exists) {
+    if (!exists) {
+        return knex.schema.createTable('prodtopacks', function (table) {
+            table.increments();
+            table.integer('packs_id').references('packs.id');
+            table.integer('productos_id').references('productos.id');
+        });
+    }
+});
+
