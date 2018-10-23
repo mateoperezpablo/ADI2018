@@ -43,6 +43,14 @@ app.get("/linpedidos", function(pet, resp){
 
 })
 
+app.get("/packs", function(pet, resp){
+    listarPacks(function(datos){
+        resp.send(datos)
+        console.log(datos)
+    })
+
+})
+
 
 //CAPA DE ACCESO A DATOS
 function listarProductos(callback) {
@@ -73,12 +81,17 @@ function listarLinpedidos(callback) {
     })
 }
 
+function listarPacks(callback) {
+    knex.select().from('packs')
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+
+
+// INICIAR SERVIDOR
 
 app.listen(3000, function(){
     console.log("Servidor en marcha!!")
-    initDatabase();
 })
-
-function initDatabase(){
-
-}
