@@ -1,5 +1,8 @@
 var express = require('express')
 var app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 var knex = require('knex')({
     client: 'sqlite3',
@@ -51,6 +54,14 @@ app.get("/packs", function(pet, resp){
 
 })
 
+app.get("/packs/:id", function(pet, resp){
+    getPack(parseInt(pet.params.id), function(datos){
+        resp.send(datos[0])
+        console.log(datos[0])
+    })
+
+})
+
 
 //CAPA DE ACCESO A DATOS
 function listarProductos(callback) {
@@ -83,6 +94,13 @@ function listarLinpedidos(callback) {
 
 function listarPacks(callback) {
     knex.select().from('packs')
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function getPack(idpack, callback) {
+    knex.select().from('packs').where({id: idpack})
     .then(function(datos){
       callback(datos)
     })
