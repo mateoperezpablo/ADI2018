@@ -62,6 +62,14 @@ app.get("/packs/:id", function(pet, resp){
 
 })
 
+app.get("/packs/:id/productos", function(pet, resp){
+    getProductosPack(parseInt(pet.params.id), function(datos){
+        resp.send(datos)
+        console.log(datos)
+    })
+
+})
+
 
 //CAPA DE ACCESO A DATOS
 function listarProductos(callback) {
@@ -101,6 +109,15 @@ function listarPacks(callback) {
 
 function getPack(idpack, callback) {
     knex.select().from('packs').where({id: idpack})
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function getProductosPack(idpack, callback) {
+    knex.select().from('productos').whereIn('id', function(){
+        this.select('productos_id').from('prodtopacks').where({packs_id: idpack});
+    })
     .then(function(datos){
       callback(datos)
     })
