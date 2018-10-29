@@ -50,6 +50,16 @@ app.put("/productos", function(pet, resp){
 
 })
 
+app.delete("/productos", function(pet, resp){
+    var prod = pet.body;
+    deleteProducto(prod, function(datos){
+        var da = {id: datos[0]}
+        resp.send(da)
+        console.log(da)
+    })
+
+})
+
 app.get("/pedidos", function(pet, resp){
     listarPedidos(function(datos){
         resp.send(datos)
@@ -152,6 +162,13 @@ function anyadirProducto(prod, callback) {
 
 function actualizarProducto(prod, callback) {
     knex('productos').where({id: prod.id}).update({nombre: prod.nombre, descripcion: prod.descripcion, precio: prod.precio, categoria_id: prod.categoria})
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function deleteProducto(prod, callback) {
+    knex('productos').where({id: prod.id}).delete()
     .then(function(datos){
       callback(datos)
     })
