@@ -2,7 +2,12 @@ var express = require('express')
 var app = express()
 const bodyParser = require('body-parser')
 
+var jwt = require('jwt-simple');
+var moment = require('moment');
+
 app.use(bodyParser.json())
+
+var secretkey = '123456789'
 
 var knex = require('knex')({
     client: 'sqlite3',
@@ -12,12 +17,55 @@ var knex = require('knex')({
     useNullAsDefault: true
 });
 
+//MIDDLEWARES
+
+function checkAuth(pet, resp, next) {
+    var token = pet.headers.authorization.split(" ")[1];
+    var decoded = jwt.decode(token, secretkey);
+    if (decoded) {
+        if(decoded.exp < moment().valueOf()){
+            //ha expirado el token
+            resp.status(401);
+            resp.send("El token ha expirado");
+        }
+        else{
+            //el token está bien
+            console.log("Token correctisimo");
+            next();
+        }
+    }
+    else {
+        resp.status(401);
+        resp.send("Debes autentificarte");      
+    }
+}
+
 
 //CAPA WEB
 app.get("/categorias", function(pet, resp){
     listarCategorias(function(datos){
         resp.send(datos)
         console.log(datos)
+    })
+
+})
+
+app.post("/login", function(pet, resp){
+    var usu = pet.body;
+    getUsuarioNick(usu, function(datos){
+        if(datos[0].password == pet.body.password){
+            //token
+            var payload = {
+                login: usu.nick,
+                exp: moment().add(10, 'minutes').valueOf()
+            }
+            var token = jwt.encode(payload, secretkey);
+            resp.send(token);
+        }
+        else{
+            //error
+            resp.send("Error en el login");
+        }
     })
 
 })
@@ -60,7 +108,7 @@ app.delete("/productos", function(pet, resp){
 
 })
 
-app.get("/pedidos", function(pet, resp){
+app.get("/pedidos",checkAuth, function(pet, resp){
     listarPedidos(function(datos){
         resp.send(datos)
         console.log(datos)
@@ -104,6 +152,13 @@ app.get("/packs/:id/productos", function(pet, resp){
 //CAPA DE ACCESO A DATOS
 function listarProductos(callback) {
     knex.select().from('productos')
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function getUsuarioNick(usu, callback) {
+    knex.select().from('usuarios').where({nick: usu.nick})
     .then(function(datos){
       callback(datos)
     })
