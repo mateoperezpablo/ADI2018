@@ -30,6 +30,16 @@ app.get("/productos", function(pet, resp){
 
 })
 
+app.post("/productos", function(pet, resp){
+    var prod = pet.body;
+    anyadirProducto(prod, function(datos){
+        var da = {id: datos[0]}
+        resp.send(da)
+        console.log(da)
+    })
+
+})
+
 app.get("/pedidos", function(pet, resp){
     listarPedidos(function(datos){
         resp.send(datos)
@@ -118,6 +128,13 @@ function getProductosPack(idpack, callback) {
     knex.select().from('productos').whereIn('id', function(){
         this.select('productos_id').from('prodtopacks').where({packs_id: idpack});
     })
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function anyadirProducto(prod, callback) {
+    knex('productos').insert({nombre: prod.nombre, descripcion: prod.descripcion, precio: prod.precio, categoria_id: prod.categoria})
     .then(function(datos){
       callback(datos)
     })
