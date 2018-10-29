@@ -40,6 +40,16 @@ app.post("/productos", function(pet, resp){
 
 })
 
+app.put("/productos", function(pet, resp){
+    var prod = pet.body;
+    actualizarProducto(prod, function(datos){
+        var da = {id: datos[0]}
+        resp.send(da)
+        console.log(da)
+    })
+
+})
+
 app.get("/pedidos", function(pet, resp){
     listarPedidos(function(datos){
         resp.send(datos)
@@ -135,6 +145,13 @@ function getProductosPack(idpack, callback) {
 
 function anyadirProducto(prod, callback) {
     knex('productos').insert({nombre: prod.nombre, descripcion: prod.descripcion, precio: prod.precio, categoria_id: prod.categoria})
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function actualizarProducto(prod, callback) {
+    knex('productos').where({id: prod.id}).update({nombre: prod.nombre, descripcion: prod.descripcion, precio: prod.precio, categoria_id: prod.categoria})
     .then(function(datos){
       callback(datos)
     })
