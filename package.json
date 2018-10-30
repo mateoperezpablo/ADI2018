@@ -20,7 +20,11 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "jwt-simple": "^0.5.5",
     "knex": "^0.15.2",
+    "moment": "^2.22.2",
+    "money": "^0.2.0",
+    "nodemon": "^1.18.5",
     "sqlite3": "^4.0.2"
   }
 }
