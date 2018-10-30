@@ -1,9 +1,18 @@
 var express = require('express')
 var app = express()
 const bodyParser = require('body-parser')
+const https = require('https');
 
 var jwt = require('jwt-simple');
 var moment = require('moment');
+var money = require('money');
+
+var conversionAPI = require('currency-conversion');
+var conversionapi = new conversionAPI({
+	access_key: "e8302d51ffcf05f12a5b27b4b4c75d5a"
+});
+
+const conversionkey = "e8302d51ffcf05f12a5b27b4b4c75d5a";
 
 app.use(bodyParser.json())
 
@@ -20,6 +29,10 @@ var knex = require('knex')({
 //MIDDLEWARES
 
 function checkAuth(pet, resp, next) {
+    if(!pet.headers.authorization){
+        resp.status(401);
+        resp.send("Debes enviar un token");  
+    }
     var token = pet.headers.authorization.split(" ")[1];
     var decoded = jwt.decode(token, secretkey);
     if (decoded) {
@@ -36,7 +49,7 @@ function checkAuth(pet, resp, next) {
     }
     else {
         resp.status(401);
-        resp.send("Debes autentificarte");      
+        resp.send("El token enviado no es correcto");      
     }
 }
 
@@ -63,7 +76,7 @@ app.post("/login", function(pet, resp){
             resp.send(token);
         }
         else{
-            //error
+            resp.status(401)
             resp.send("Error en el login");
         }
     })
@@ -78,32 +91,93 @@ app.get("/productos", function(pet, resp){
 
 })
 
+app.get("/productos/:id", function(pet, resp){
+    var conv = pet.query.conversion;
+    getProducto(parseInt(pet.params.id), function(datos){
+        if(!datos[0]){
+            resp.status(404);
+            resp.send("No existe recurso con esa ID")
+        }
+        if(conv){
+
+            var old = datos[0].precio;
+            var nuevo = 0;
+            https.get("https://apilayer.net/api/live?access_key=" + conversionkey +"currencies=USD,AUD,CAD,PLN,MXN&format=1", function(datos){
+                //var parsed = JSON.parse(datos);
+                var body = "";
+                var parsed;
+                datos.on('data', function(d) {
+                    body += d;
+                });
+                datos.on('end', function() {
+                // Data received, let us parse it using JSON!
+                    parsed = JSON.parse(body);
+                });
+                console.log(parsed);
+            })
+            
+        }
+
+        resp.send(datos[0])
+        console.log(datos[0])
+    })
+
+})
+
 app.post("/productos", function(pet, resp){
     var prod = pet.body;
-    anyadirProducto(prod, function(datos){
-        var da = {id: datos[0]}
-        resp.send(da)
-        console.log(da)
-    })
+    if(!prod.nombre || !prod.categeoria){
+        resp.status(400)
+        resp.send("Error, el nombre y la categoria son obligatorios.")
+    }
+    else{
+        anyadirProducto(prod, function(datos){
+            if(!datos){
+                resp.status(400)
+                resp.send("Error, el recurso no se creó. Revisa la sintáxis.")
+            }
+            var da = {id: datos[0]}
+            resp.status(201);
+            resp.send(da)
+            console.log(da)
+        })
+    }
 
 })
 
 app.put("/productos", function(pet, resp){
     var prod = pet.body;
-    actualizarProducto(prod, function(datos){
-        var da = {id: datos[0]}
-        resp.send(da)
-        console.log(da)
-    })
+    if(!prod.nombre || !prod.categeoria){
+        resp.status(400)
+        resp.send("Error, el nombre y la categoria son obligatorios.")
+    }
+    else{
+        actualizarProducto(prod, function(datos){
+            if(!datos){
+                resp.status(400)
+                resp.send("Error, el recurso no se creó. Revisa la sintáxis y que la ID sea correcta.")
+            }
+            resp.status(201)
+            var da = {id: prod.id}
+            resp.send(da)
+            console.log(da)
+        })
+    }
+
 
 })
 
 app.delete("/productos", function(pet, resp){
     var prod = pet.body;
     deleteProducto(prod, function(datos){
-        var da = {id: datos[0]}
-        resp.send(da)
-        console.log(da)
+        if(datos){
+            var da = {id: prod.id}
+            resp.send(da)
+        }
+        else{
+            resp.status(404)
+            resp.send("Error, el recurso para eliminar no fue encontrado");
+        }
     })
 
 })
@@ -134,6 +208,10 @@ app.get("/packs", function(pet, resp){
 
 app.get("/packs/:id", function(pet, resp){
     getPack(parseInt(pet.params.id), function(datos){
+        if(!datos[0]){
+            resp.status(404);
+            resp.send("No existe recurso con esa ID")
+        }
         resp.send(datos[0])
         console.log(datos[0])
     })
@@ -142,6 +220,10 @@ app.get("/packs/:id", function(pet, resp){
 
 app.get("/packs/:id/productos", function(pet, resp){
     getProductosPack(parseInt(pet.params.id), function(datos){
+        if(!datos[0]){
+            resp.status(404);
+            resp.send("No existe recurso con esa ID")
+        }
         resp.send(datos)
         console.log(datos)
     })
@@ -194,6 +276,13 @@ function listarPacks(callback) {
 
 function getPack(idpack, callback) {
     knex.select().from('packs').where({id: idpack})
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function getProducto(idproducto, callback) {
+    knex.select().from('productos').where({id: idproducto})
     .then(function(datos){
       callback(datos)
     })

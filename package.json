@@ -19,7 +19,9 @@
   "homepage": "https://github.com/mateoperezpablo/ADI2018#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "currency-conversion": "^0.2.4",
     "express": "^4.16.4",
+    "https": "^1.0.0",
     "jwt-simple": "^0.5.5",
     "knex": "^0.15.2",
     "moment": "^2.22.2",
