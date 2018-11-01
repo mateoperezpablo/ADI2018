@@ -66,6 +66,10 @@ app.get("/categorias", function(pet, resp){
 
 app.post("/login", function(pet, resp){
     var usu = pet.body;
+    if(!usu.nick || !usu.password){
+        resp.status(400)
+        resp.send("Error, no se han dado credenciales suficientes")
+    }
     getUsuarioNick(usu, function(datos){
         if(datos[0].password == pet.body.password){
             //token
