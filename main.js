@@ -6,6 +6,7 @@ const https = require('https');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 var money = require('money');
+const fetch = require("node-fetch")
 
 var conversionAPI = require('currency-conversion');
 var conversionapi = new conversionAPI({
@@ -102,24 +103,30 @@ app.get("/productos/:id", function(pet, resp){
 
             var old = datos[0].precio;
             var nuevo = 0;
-            https.get("https://apilayer.net/api/live?access_key=" + conversionkey +"currencies=USD,AUD,CAD,PLN,MXN&format=1", function(datos){
-                //var parsed = JSON.parse(datos);
-                var body = "";
-                var parsed;
-                datos.on('data', function(d) {
-                    body += d;
-                });
-                datos.on('end', function() {
-                // Data received, let us parse it using JSON!
-                    parsed = JSON.parse(body);
-                });
-                console.log(parsed);
-            })
+            fetch("http://apilayer.net/api/live?access_key=" + conversionkey +"&currencies=" + conv + "&format=1").then(function (data){
+                data.json().then(function (dat){
+                    if(!dat.error){
+                        var quotes = dat.quotes
+                        var factor = Object.keys(quotes)[0]
+                        nuevo = old * quotes[factor]
+                        datos[0].precio = nuevo.toFixed(2)
+                        console.log(quotes[factor])
+                        resp.send(datos[0])
+                        console.log(datos[0])
+                    }
+                    else{
+                        console.log(dat)
+                        resp.status(400)
+                        resp.send("Error, comprueba que has introducido bien la moneda a convertir")
+                    }
+                })
+            });
             
         }
-
-        resp.send(datos[0])
-        console.log(datos[0])
+        else{
+            resp.send(datos[0])
+            console.log(datos[0])
+        }
     })
 
 })
