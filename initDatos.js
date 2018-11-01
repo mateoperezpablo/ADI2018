@@ -16,8 +16,16 @@ knex('categorias').insert({nombre: "Pantallas", descripcion: "descripcion sencil
 
 knex('productos').insert({nombre: "Raton LG", descripcion: "descripcion", precio: 10.05, categoria_id: 1}).then();
 knex('productos').insert({nombre: "Raton Razer", descripcion: "descripcion", precio: 12.55, categoria_id: 1}).then();
-knex('productos').insert({nombre: "Teclado LG", descripcion: "descripcion", precio: 7.05, categoria_id: 1}).then();
-knex('productos').insert({nombre: "Pantalla TTL", descripcion: "descripcion", precio: 120.18, categoria_id: 1}).then();
+knex('productos').insert({nombre: "Teclado LG", descripcion: "descripcion", precio: 7.05, categoria_id: 2}).then();
+knex('productos').insert({nombre: "Pantalla TTL", descripcion: "descripcion", precio: 120.18, categoria_id: 3}).then();
+knex('productos').insert({nombre: "Raton TTL", descripcion: "descripcion", precio: 10.05, categoria_id: 1}).then();
+knex('productos').insert({nombre: "Raton KYS", descripcion: "descripcion", precio: 12.55, categoria_id: 1}).then();
+knex('productos').insert({nombre: "Teclado Ninja", descripcion: "descripcion", precio: 7.05, categoria_id: 2}).then();
+knex('productos').insert({nombre: "Pantalla Samsung", descripcion: "descripcion", precio: 120.18, categoria_id: 3}).then();
+knex('productos').insert({nombre: "Raton Samsung", descripcion: "descripcion", precio: 10.05, categoria_id: 1}).then();
+knex('productos').insert({nombre: "Raton Rivals", descripcion: "descripcion", precio: 12.55, categoria_id: 1}).then();
+knex('productos').insert({nombre: "Teclado Sony", descripcion: "descripcion", precio: 7.05, categoria_id: 2}).then();
+knex('productos').insert({nombre: "Pantalla Sony", descripcion: "descripcion", precio: 120.18, categoria_id: 3}).then();
 
 knex('pedidos').insert({usuario_id: 1}).then();
 knex('pedidos').insert({usuario_id: 1}).then();
