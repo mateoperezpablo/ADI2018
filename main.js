@@ -86,8 +86,31 @@ app.post("/login", function(pet, resp){
 
 app.get("/productos", function(pet, resp){
     listarProductos(function(datos){
-        resp.send(datos)
-        console.log(datos)
+        var pagesize = pet.query.pagesize;
+        var page = pet.query.page;
+        if(pagesize && page){
+            var first = (pagesize*(page - 1))
+            var last  = (pagesize*page)
+            var arr = datos.slice(first, last)
+            if(!arr[0]){
+                if(datos[first-1]){
+                    resp.send("Esa era la última página D:");
+                }
+                else{
+                    resp.status(400)
+                    resp.send("Error, comprueba tus opciones de paginado")
+                }
+            }else{
+                console.log(first + " " + last)
+                resp.send(arr)
+            }
+            
+        }
+        else{
+            resp.send(datos)
+            console.log(datos)
+        }
+        
     })
 
 })
