@@ -160,7 +160,7 @@ app.get("/productos/:id", function(pet, resp){
 
 app.post("/productos", function(pet, resp){
     var prod = pet.body;
-    if(!prod.nombre || !prod.categeoria){
+    if(!prod.nombre || !prod.categoria){
         resp.status(400)
         resp.send("Error, el nombre y la categoria son obligatorios.")
     }
@@ -181,9 +181,9 @@ app.post("/productos", function(pet, resp){
 
 app.put("/productos", function(pet, resp){
     var prod = pet.body;
-    if(!prod.nombre || !prod.categeoria){
+    if(!prod.id || !prod.nombre || !prod.categoria){
         resp.status(400)
-        resp.send("Error, el nombre y la categoria son obligatorios.")
+        resp.send("Error, el nombre, la id y la categoria son obligatorios.")
     }
     else{
         actualizarProducto(prod, function(datos){
