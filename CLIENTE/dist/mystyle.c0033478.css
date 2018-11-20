@@ -1,0 +1,16 @@
+.flex-container-center{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.flex-container-row{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.flex-container-column{
+    display:flex;
+    flex-direction: column;
+}
