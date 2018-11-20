@@ -3,6 +3,10 @@ var app = express()
 const bodyParser = require('body-parser')
 const https = require('https');
 
+var cors = require('cors')
+//Suponiendo "app" la variable obtenida como app=express()
+app.use(cors())
+
 var jwt = require('jwt-simple');
 var moment = require('moment');
 var money = require('money');
