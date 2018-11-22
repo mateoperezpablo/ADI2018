@@ -13,8 +13,57 @@ function getProductos(callback){
 
 export {getProductos}
 
+function getProductoId(id,callback){
+    fetch(urlAPI + '/productos/'+ id).then(function(response){
+        response.json().then(function(data){
+            //console.log(data);
+            return callback(data);
+        })
+    })
+}
+
+export {getProductoId}
+
+function deleteProducto(id,callback){
+    var us = {id: id}
+    fetch(urlAPI + '/productos', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        method: 'DELETE',
+        body: JSON.stringify(us)
+    }).then(function(response){
+        if(response.status > 199 && response.status < 299){
+            callback('ok')
+        }
+        callback('no ok')
+    })
+}
+
+export {deleteProducto}
+
+function addProducto(prod,callback){
+    fetch(urlAPI + '/productos', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        method: 'POST',
+        body: JSON.stringify(prod)
+    }).then(function(response){
+        if(response.status > 199 && response.status < 299){
+            callback('ok')
+        }
+        callback('no ok')
+    })
+}
+
+export {addProducto}
+
 function getProductosCategoria(idcategoria, callback){
-    fetch(urlAPI + '/categorias/'+idcategoria+'/productos').then(function(response){
+    fetch(urlAPI + '/categorias/'+idcategoria+'/productos',
+    ).then(function(response){
         response.json().then(function(data){
             //console.log(data);
             return callback(data);

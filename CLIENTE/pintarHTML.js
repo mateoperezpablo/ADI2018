@@ -13,3 +13,17 @@ function pintarPlantilla(){
 }
 
 export {pintarPlantilla};
+
+function pintarVerProducto(){
+    var text = fs.readFileSync('htmls/producto.html', 'utf8');
+    return text;
+}
+
+export {pintarVerProducto};
+
+function pintarCrearProducto(){
+    var text = fs.readFileSync('htmls/crearProducto.html', 'utf8');
+    return text;
+}
+
+export {pintarCrearProducto};
