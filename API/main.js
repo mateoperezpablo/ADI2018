@@ -68,14 +68,28 @@ app.get("/categorias", function(pet, resp){
 
 })
 
+app.get("/categorias/:id/productos", function(pet, resp){
+    getProductosCategoria(parseInt(pet.params.id), function(datos){
+        if(!datos[0]){
+            resp.status(404);
+            resp.send("No existe recurso con esa ID")
+        }
+        resp.send(datos)
+        console.log(datos)
+    })
+
+})
+
+
 app.post("/login", function(pet, resp){
     var usu = pet.body;
+    console.log(usu);
     if(!usu.nick || !usu.password){
         resp.status(400)
         resp.send("Error, no se han dado credenciales suficientes")
     }
     getUsuarioNick(usu, function(datos){
-        if(datos[0].password == pet.body.password){
+        if(datos[0] && datos[0].password == pet.body.password){
             //token
             var payload = {
                 login: usu.nick,
@@ -330,6 +344,13 @@ function getProductosPack(idpack, callback) {
     knex.select().from('productos').whereIn('id', function(){
         this.select('productos_id').from('prodtopacks').where({packs_id: idpack});
     })
+    .then(function(datos){
+      callback(datos)
+    })
+}
+
+function getProductosCategoria(idcategoria, callback) {
+    knex.select().from('productos').where({categoria_id: idcategoria})
     .then(function(datos){
       callback(datos)
     })

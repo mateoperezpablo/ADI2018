@@ -13,6 +13,8 @@
     "parcel-bundler": "^1.10.3"
   },
   "dependencies": {
-    "handlebars": "^4.0.12"
+    "fs": "0.0.1-security",
+    "handlebars": "^4.0.12",
+    "node-fetch": "^2.3.0"
   }
 }

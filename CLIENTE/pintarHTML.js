@@ -1,17 +1,15 @@
+var fs = require("fs");
+
 function pintarLogin(){
-    return '<div class="flex-container-center">' +
-                '<div class="flex-container-column">' +
-                    //'<div class="flex-container-row>' +
-                        'Login: ' +
-                        '<input id="inputLogin" type="text">' +
-                    //'</div>' +
-                    //'<div class="flex-container-row>' +
-                        'Password: ' +
-                        '<input id="inputPassword" type="password">' +
-                    //'</div>' +
-                    '<button id="botonLogin" type="button" value="Login">' +
-                '</div>' +
-            '</div>'
+    var text = fs.readFileSync('htmls/login.html', 'utf8');
+    return text;
 }
 
 export {pintarLogin};
+
+function pintarPlantilla(){
+    var text = fs.readFileSync('htmls/plantilla.html', 'utf8');
+    return text;
+}
+
+export {pintarPlantilla};
