@@ -116,8 +116,12 @@ exports.pintarLogin = pintarLogin;
 exports.pintarPlantilla = pintarPlantilla;
 exports.pintarVerProducto = pintarVerProducto;
 exports.pintarCrearProducto = pintarCrearProducto;
+exports.pintarModificarProducto = pintarModificarProducto;
+exports.pintarlistaProductos = pintarlistaProductos;
 
-var fs = require("fs");
+var fs = require("fs"); //Todas las funciones leen diferentes archivos html que sirven de plantilla,
+//y devuelven estos archivos en un string para insertarlos 
+
 
 function pintarLogin() {
   var text = "<div class=\"container\">\n        <div class=\"card card-login mx-auto mt-5\">\n          <div class=\"card-header\">Login</div>\n          <div id=\"loginDiv\" class=\"card-body\">\n            <form>\n              <div class=\"form-group\">\n                <div class=\"form-label-group\">\n                  <input type=\"text\" id=\"inputUsuario\" class=\"form-control\" placeholder=\"Usuario\" required=\"required\" autofocus=\"autofocus\">\n                  <label for=\"inputUsuario\">Usuario</label>\n                </div>\n              </div>\n              <div class=\"form-group\">\n                <div class=\"form-label-group\">\n                  <input type=\"password\" id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required=\"required\">\n                  <label for=\"inputPassword\">Password</label>\n                </div>\n              </div>\n              <a id=\"botonLogin\" class=\"btn btn-primary btn-block\" href=\"#\">Login</a>\n            </form>\n          </div>\n        </div>\n      </div>";
@@ -125,7 +129,7 @@ function pintarLogin() {
 }
 
 function pintarPlantilla() {
-  var text = "<nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n    <a class=\"navbar-brand\" id=\"botonHome\" href=\"#\">Bienvenido</a>\n    <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\" aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n      <span class=\"navbar-toggler-icon\"></span>\n    </button>\n\n    <div class=\"navbar-collapse collapse w-100 order-3 dual-collapse2\">\n            <ul class=\"navbar-nav ml-auto\">\n                    <li class=\"nav-item\">\n                            <a id=\"linkCrearProducto\" class=\"nav-link\" href=\"#\">Crear Producto</a>\n                          </li>\n                    <li class=\"nav-item dropdown\" style=\"margin-left: auto\">\n                        <a id=\"nomUsuario\" class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                        Esto es una prueba\n                        </a>\n                        <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\n                            <a id=\"linkLogout\" class=\"dropdown-item\" href=\"#\">Logout</a>\n                        </div>\n                    </li>\n            </ul>\n        </div>\n</nav>\n\n<!-- Sidebar -->\n<div id=\"wrapper\">\n    <ul class=\"sidebar navbar-nav\">\n            <li class=\"nav-item active\">\n            <a class=\"nav-link\" href=\"#\">\n                <i class=\"fas fa-fw\"></i>\n                <span>Categorias</span>\n            </a>\n            </li>\n            <div id=\"divCategorias\">\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#\">\n                        <i class=\"fas fa-fw\"></i>\n                        <span>Ratones</span></a>\n                </li>\n            </div>\n\n    </ul>\n\n    <!-- Productos -->\n    <div id=\"content-wrapper\">\n        <div id=\"principalVista\" class=\"container-fluid\">\n            <div class=\"table-responsive\">\n                <table class=\"table table-bordered\" style=\"color:#F7F9FA\">\n                    <thead>\n                        <tr>\n                            <th>ID</th>\n                            <th>Nombre</th>\n                            <th>Acciones</th>\n                        </tr>\n                    </thead>\n                    <tbody id=\"tablaProductos\">\n                        <tr>\n                            <td>999</td>\n                            <td>Ejemplo</td>\n                            <td><a href=\"#\">Una cosa</a><a href=\"#\">Otra cosa</a></td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n    </div>\n</div>";
+  var text = "<!--<nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n    <a class=\"navbar-brand\" id=\"botonHome\" href=\"#\">Bienvenido</a>\n    <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\" aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n      <span class=\"navbar-toggler-icon\"></span>\n    </button>\n\n    <div class=\"navbar-collapse collapse w-100 order-3 dual-collapse2\">\n            <ul class=\"navbar-nav ml-auto\">\n                    <li class=\"nav-item\">\n                            <a id=\"linkCrearProducto\" class=\"nav-link\" href=\"#\">Crear Producto</a>\n                          </li>\n                    <li class=\"nav-item dropdown\" style=\"margin-left: auto\">\n                        <a id=\"nomUsuario\" class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                        Esto es una prueba\n                        </a>\n                        <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\n                            <a id=\"linkLogout\" class=\"dropdown-item\" href=\"#\">Logout</a>\n                        </div>\n                    </li>\n            </ul>\n        </div>\n</nav>-->\n\n\n<nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n    <div class=\"navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2\">\n        <ul class=\"navbar-nav mr-auto\">\n            <li class=\"nav-item active\">\n                <a class=\"navbar-brand\" id=\"botonHome\" href=\"#\">Inicio</a>\n            </li>\n            <li class=\"nav-item\">\n                <a id=\"linkCrearProducto\" class=\"nav-link\" href=\"#\">Crear Producto</a>\n            </li>\n        </ul>\n    </div>\n    <div class=\"navbar-collapse collapse w-100 order-3 dual-collapse2\">\n        <ul class=\"navbar-nav ml-auto\">\n            <li class=\"nav-item\">\n                <a id=\"nomUsuario\" class=\"nav-link\" style=\"font-weight: bold\" href=\"#\"></a>\n            </li>\n            <li class=\"nav-item\">\n                <a id=\"linkLogout\" class=\"nav-link\" style=\"color: rgba(216, 16, 56, 0.600)\" href=\"#\">Logout</a>\n            </li>\n        </ul>\n    </div>\n</nav>\n\n\n<!-- Sidebar -->\n<div id=\"wrapper\">\n    <ul class=\"sidebar navbar-nav\">\n            <li class=\"nav-item active\">\n            <a class=\"nav-link\" href=\"#\">\n                <i class=\"fas fa-fw\"></i>\n                <span>Categorias</span>\n            </a>\n            </li>\n            <div id=\"divCategorias\">\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#\">\n                        <i class=\"fas fa-fw\"></i>\n                        <span>Ratones</span></a>\n                </li>\n            </div>\n\n    </ul>\n\n    <!-- Productos -->\n    <div id=\"content-wrapper\">\n        <div id=\"principalVista\" class=\"container-fluid\">\n            <div class=\"table-responsive\">\n                <table class=\"table table-bordered\" style=\"color:#F7F9FA\">\n                    <thead>\n                        <tr>\n                            <th>ID</th>\n                            <th>Nombre</th>\n                            <th>Acciones</th>\n                        </tr>\n                    </thead>\n                    <tbody id=\"tablaProductos\">\n                        <tr>\n                            <td>999</td>\n                            <td>Ejemplo</td>\n                            <td><a href=\"#\">Una cosa</a><a href=\"#\">Otra cosa</a></td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n    </div>\n</div>";
   return text;
 }
 
@@ -135,7 +139,17 @@ function pintarVerProducto() {
 }
 
 function pintarCrearProducto() {
-  var text = "<div class=\"container\">\n    <form>\n        <div class=\"form-group\">\n          <label for=\"inputNombre\" style=\"color: white;\">Nombre del producto</label>\n          <input type=\"text\" class=\"form-control\" id=\"inputNombre\" placeholder=\"Nombre\">\n        </div>\n        <div class=\"form-group\">\n                <label for=\"inputPrecio\" style=\"color: white;\">Precio del producto</label>\n                <input type=\"text\" class=\"form-control\" id=\"inputPrecio\" placeholder=\"0\">\n        </div>\n        <div class=\"form-group\">\n                <label for=\"inputDescripcion\" style=\"color: white;\">Descripci\xF3n del producto</label>\n                <input type=\"text\" class=\"form-control\" id=\"inputDescripcion\" placeholder=\"Descripcion\">\n        </div>\n        <button id=\"botonCrearProducto\" type=\"submit\" class=\"btn btn-primary\">Crear producto</button>\n    </form>\n</div>";
+  var text = "<div class=\"container\">\n    <form>\n        <div class=\"form-group\">\n          <label for=\"inputNombre\" style=\"color: white;\">Nombre del producto</label>\n          <input type=\"text\" class=\"form-control\" id=\"inputNombre\" placeholder=\"Nombre\">\n        </div>\n        <div class=\"form-group\">\n                <label for=\"inputPrecio\" style=\"color: white;\">Precio del producto</label>\n                <input type=\"text\" class=\"form-control\" id=\"inputPrecio\" placeholder=\"0\">\n        </div>\n        <div class=\"form-group\">\n                <label for=\"inputDescripcion\" style=\"color: white;\">Descripci\xF3n del producto</label>\n                <input type=\"text\" class=\"form-control\" id=\"inputDescripcion\" placeholder=\"Descripcion\">\n        </div>\n        <div class=\"form-group\">\n            <label for=\"inputCategoria\" style=\"color: white;\">Categoria del producto</label>\n            <select class=\"form-control\" id=\"inputCategoria\">\n              </select>\n    </div>\n        <button id=\"botonCrearProducto\" type=\"submit\" class=\"btn btn-primary\">Crear producto</button>\n    </form>\n</div>";
+  return text;
+}
+
+function pintarModificarProducto() {
+  var text = "<div class=\"container\">\n        <form>\n            <div class=\"form-group\">\n                <label for=\"inputId\" style=\"color: white;\">ID del producto</label>\n                <input type=\"text\" class=\"form-control\" id=\"inputId\" readonly>\n            </div>\n            <div class=\"form-group\">\n              <label for=\"inputNombre\" style=\"color: white;\">Nombre del producto</label>\n              <input type=\"text\" class=\"form-control\" id=\"inputNombre\" placeholder=\"Nombre\">\n            </div>\n            <div class=\"form-group\">\n                    <label for=\"inputPrecio\" style=\"color: white;\">Precio del producto</label>\n                    <input type=\"text\" class=\"form-control\" id=\"inputPrecio\" placeholder=\"0\">\n            </div>\n            <div class=\"form-group\">\n                    <label for=\"inputDescripcion\" style=\"color: white;\">Descripci\xF3n del producto</label>\n                    <input type=\"text\" class=\"form-control\" id=\"inputDescripcion\" placeholder=\"Descripcion\">\n            </div>\n            <div class=\"form-group\">\n                <label for=\"inputCategoria\" style=\"color: white;\">Categoria del producto</label>\n                <select class=\"form-control\" id=\"inputCategoria\">\n                  </select>\n        </div>\n            <button id=\"botonCrearProducto\" type=\"submit\" class=\"btn btn-primary\">Crear producto</button>\n        </form>\n    </div>";
+  return text;
+}
+
+function pintarlistaProductos() {
+  var text = "<div class=\"table-responsive\">\n    <table class=\"table table-bordered\" style=\"color:#F7F9FA\">\n        <thead>\n            <tr>\n                <th>ID</th>\n                <th>Nombre</th>\n                <th>Acciones</th>\n            </tr>\n        </thead>\n        <tbody id=\"tablaProductos\">\n            <tr>\n                <td>999</td>\n                <td>Ejemplo</td>\n                <td><a href=\"#\">Una cosa</a><a href=\"#\">Otra cosa</a></td>\n            </tr>\n        </tbody>\n    </table>\n</div>";
   return text;
 }
 },{"fs":"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/_empty.js"}],"node_modules/node-fetch/browser.js":[function(require,module,exports) {
@@ -178,13 +192,14 @@ exports.getProductos = getProductos;
 exports.getProductoId = getProductoId;
 exports.deleteProducto = deleteProducto;
 exports.addProducto = addProducto;
+exports.updateProducto = updateProducto;
 exports.getProductosCategoria = getProductosCategoria;
 exports.getCategorias = getCategorias;
 exports.login = login;
 
 var fetch = require("node-fetch");
 
-var urlAPI = 'http://localhost:3000';
+var urlAPI = 'http://localhost:3000'; //Funcion que pide todos los productos a la API y los devuelve en un array de JSON
 
 function getProductos(callback) {
   fetch(urlAPI + '/productos').then(function (response) {
@@ -195,6 +210,7 @@ function getProductos(callback) {
   });
 }
 
+//Funcion que llama a la API que devuelve un producto en concreto dada su ID
 function getProductoId(id, callback) {
   fetch(urlAPI + '/productos/' + id).then(function (response) {
     response.json().then(function (data) {
@@ -204,14 +220,16 @@ function getProductoId(id, callback) {
   });
 }
 
-function deleteProducto(id, callback) {
+//Funcion que llama a la API que borra un producto dada su ID
+function deleteProducto(id, token, callback) {
   var us = {
     id: id
   };
   fetch(urlAPI + '/productos', {
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
     },
     method: 'DELETE',
     body: JSON.stringify(us)
@@ -224,6 +242,8 @@ function deleteProducto(id, callback) {
   });
 }
 
+//Funcion que llama a la API que dados unos datos de producto inserta un producto
+//con estos datos
 function addProducto(prod, callback) {
   fetch(urlAPI + '/productos', {
     headers: {
@@ -241,6 +261,27 @@ function addProducto(prod, callback) {
   });
 }
 
+//Funcion que llama a la API que dados unos datos de producto actualiza un producto
+//con estos datos
+function updateProducto(prod, callback) {
+  fetch(urlAPI + '/productos', {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    method: 'PUT',
+    body: JSON.stringify(prod)
+  }).then(function (response) {
+    if (response.status > 199 && response.status < 299) {
+      callback('ok');
+    }
+
+    callback('no ok');
+  });
+}
+
+//Funcion que llama a la API que dada la ID de una categoria devuelve todos los productos que
+//se encuentran en dicha categoria
 function getProductosCategoria(idcategoria, callback) {
   fetch(urlAPI + '/categorias/' + idcategoria + '/productos').then(function (response) {
     response.json().then(function (data) {
@@ -250,6 +291,7 @@ function getProductosCategoria(idcategoria, callback) {
   });
 }
 
+//Funcion que pide todas las categorias a la API y las devuelve en un array de JSON
 function getCategorias(callback) {
   fetch(urlAPI + '/categorias').then(function (response) {
     response.json().then(function (data) {
@@ -259,6 +301,8 @@ function getCategorias(callback) {
   });
 }
 
+//Funcion que hace login en la API. Si es correcto, devuelve un token, y si no lo es devuelve
+//un mensaje de error
 function login(usuario, pass, callback) {
   var us = {
     nick: usuario,
@@ -293,12 +337,16 @@ var _pintarHTML = require("./pintarHTML.js");
 
 var _conexionAPI = require("./conexionAPI.js");
 
+var _dns = require("dns");
+
+//Funcion que dado un token devuelve el payload decodificado
 function decodeUsuario(token) {
   var coded = token.split('.')[1];
   var decoded = atob(coded);
   var json = JSON.parse(decoded);
   return json;
-}
+} //Funcion que dado un producto muestra todos sus datos en una página
+
 
 function verProducto(prod) {
   (0, _conexionAPI.getProductoId)(prod.id, function (datos) {
@@ -315,10 +363,13 @@ function verProducto(prod) {
       });
     });
   });
-}
+} //Funcion que se usa cuando se pulsa el botón de borrar producto.
+//Se borra un producto dada su ID y se vuelve a pintar la interfaz según
+//si la operación tiene éxito o no
+
 
 function borrarProducto(prod) {
-  (0, _conexionAPI.deleteProducto)(prod.id, function (datos) {
+  (0, _conexionAPI.deleteProducto)(prod.id, localStorage.getItem('token'), function (datos) {
     //console.log(datos);
     document.getElementById('principal').innerHTML = (0, _pintarHTML.pintarPlantilla)();
     plantillaPintando();
@@ -332,10 +383,73 @@ function borrarProducto(prod) {
       document.getElementById('principal').innerHTML = (0, _pintarHTML.pintarPlantilla)();
       plantillaPintando();
       pintarProductos(data);
-      document.getElementById('principalVista').insertAdjacentHTML('afterbegin', '<div class="alert alert-info alert-dismissible fade show" role="alert">Producto borrado con éxito<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+      document.getElementById('principalVista').insertAdjacentHTML('afterbegin', '<div class="alert alert-info alert-dismissible fade show" role="alert">Producto borrado con éxito</div>');
     });
   });
-}
+} //Funcion que se usa cuando se pincha el botón de modificar un producto.
+//Se va a un formulario con los datos del producto actuales, los cuales
+//se pueden modificar y se pinta la interfaz según si la operación tiene
+//éxito o no
+
+
+function modificarProducto(prod) {
+  document.getElementById('principalVista').innerHTML = (0, _pintarHTML.pintarModificarProducto)();
+  document.getElementById('inputId').value = prod.id;
+  document.getElementById('inputNombre').value = prod.nombre;
+  document.getElementById('inputPrecio').value = prod.precio;
+  document.getElementById('inputDescripcion').value = prod.descripcion;
+  console.log(prod);
+  (0, _conexionAPI.getCategorias)(function (datos) {
+    var sel = document.getElementById('inputCategoria');
+    var html = '';
+
+    for (var i = 0; i < datos.length; i++) {
+      var cat = datos[i];
+      var tx = '<option value=' + cat.id + '>' + cat.nombre + '</option>';
+      html += tx;
+    }
+
+    sel.innerHTML = html;
+    var options = document.getElementById('inputCategoria').options;
+    var indx;
+
+    for (var i = 0; i < options.length; i++) {
+      console.log(options[i].value + ' ' + prod.categoria_i);
+      if (options[i].value == prod.categoria_id) indx = i;
+    }
+
+    console.log('soy la categoria ' + indx);
+    if (indx) document.getElementById('inputCategoria').selectedIndex = indx;
+    var botonMoficiar = document.getElementById('botonCrearProducto');
+    botonMoficiar.innerHTML = 'Modificar';
+    botonMoficiar.addEventListener('click', function () {
+      var nNombre = document.getElementById('inputNombre').value;
+      var nPrecio = document.getElementById('inputPrecio').value;
+      var nDescripcion = document.getElementById('inputDescripcion').value;
+      var nCategoria = document.getElementById('inputCategoria').value;
+      var nProducto = {
+        id: prod.id,
+        nombre: nNombre,
+        precio: nPrecio,
+        descripcion: nDescripcion,
+        categoria: nCategoria
+      };
+      (0, _conexionAPI.updateProducto)(nProducto, function (datos) {
+        if (datos == 'ok') {
+          document.getElementById('principal').innerHTML = _pintarHTML.pintarPlantilla;
+          plantillaPintando();
+          document.getElementById('principalVista').insertAdjacentHTML('afterbegin', '<div id="checkEsto" class="alert alert-info alert-dismissible fade show" role="alert">Producto modificado con éxito</div>');
+        }
+
+        if (datos == 'no ok') {
+          var ch = document.getElementById('checkEsto');
+          if (!ch) document.getElementById('principalVista').insertAdjacentHTML('afterbegin', '<div id="checkEsto" class="alert alert-danger alert-dismissible fade show" role="alert">Error, vuelvelo a intentar</div>');
+        }
+      });
+    });
+  });
+} //Funcion que pinta todos los productos dados en 'datos'
+
 
 function pintarProductos(datos) {
   var htmlString = "";
@@ -343,7 +457,7 @@ function pintarProductos(datos) {
 
   for (i = 0; i < datos.length; i++) {
     var producto = datos[i];
-    var t = '<tr><th>' + producto.id + '</th><th>' + producto.nombre + '</th><th><button type="button" id="ver' + i + '" style="margin-right: 15px" class="btn btn-light">Ver</button><button type="button" id="borrar' + i + '" class="btn btn-danger">Borrar</button></th></tr>';
+    var t = '<tr><th>' + producto.id + '</th><th>' + producto.nombre + '</th><th><button type="button" id="ver' + i + '" style="margin-right: 15px" class="btn btn-light">Ver</button><button type="button" id="modificar' + i + '" style="margin-right: 15px" class="btn btn-primary">Modificar</button><button type="button" id="borrar' + i + '" class="btn btn-danger">Borrar</button></th></tr>';
     htmlString += t;
   }
 
@@ -354,21 +468,28 @@ function pintarProductos(datos) {
       var prod = datos[i];
       var botonVer = document.getElementById('ver' + i);
       var botonBorrar = document.getElementById('borrar' + i);
+      var botonModificar = document.getElementById('modificar' + i);
       botonVer.addEventListener('click', function () {
         verProducto(prod);
       });
       botonBorrar.addEventListener('click', function () {
         borrarProducto(prod);
       });
+      botonModificar.addEventListener('click', function () {
+        modificarProducto(prod);
+      });
     })();
   }
-}
+} //Funcion que consigue todos los productos de una categoria y los pinta (utilizando la funcion anterior)
+
 
 function categoriaPintando(cat) {
+  document.getElementById('principalVista').innerHTML = (0, _pintarHTML.pintarlistaProductos)();
   (0, _conexionAPI.getProductosCategoria)(cat.id, function (datos) {
     pintarProductos(datos);
   });
-}
+} //Funcion que pinta toda la plantilla
+
 
 function plantillaPintando() {
   document.getElementById('principal').innerHTML = (0, _pintarHTML.pintarPlantilla)();
@@ -389,29 +510,42 @@ function plantillaPintando() {
     document.getElementById('principal').innerHTML = (0, _pintarHTML.pintarPlantilla)();
     plantillaPintando();
     document.getElementById('principalVista').innerHTML = (0, _pintarHTML.pintarCrearProducto)();
-    document.getElementById('botonCrearProducto').addEventListener('click', function () {
-      var nombre = document.getElementById('inputNombre').value;
-      var precio = document.getElementById('inputPrecio').value;
-      var descripcion = document.getElementById('inputDescripcion').value;
-      var prod = {
-        nombre: nombre,
-        precio: precio,
-        descripcion: descripcion,
-        categoria: 1
-      };
-      (0, _conexionAPI.addProducto)(prod, function (datos) {
-        console.log(datos);
+    (0, _conexionAPI.getCategorias)(function (datos) {
+      var sel = document.getElementById('inputCategoria');
+      var html = '';
 
-        if (datos == 'ok') {
-          document.getElementById('principal').innerHTML = _pintarHTML.pintarPlantilla;
-          plantillaPintando();
-          document.getElementById('principalVista').insertAdjacentHTML('afterbegin', '<div id="checkEsto" class="alert alert-info alert-dismissible fade show" role="alert">Producto creado con éxito<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-        }
+      for (var i = 0; i < datos.length; i++) {
+        var cat = datos[i];
+        var tx = '<option value=' + cat.id + '>' + cat.nombre + '</option>';
+        html += tx;
+      }
 
-        if (datos == 'no ok') {
-          var ch = document.getElementById('checkEsto');
-          if (!ch) document.getElementById('principalVista').insertAdjacentHTML('afterbegin', '<div class="alert alert-danger alert-dismissible fade show" role="alert">Error, vuelve a crear el producto<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-        }
+      sel.innerHTML = html;
+      document.getElementById('botonCrearProducto').addEventListener('click', function () {
+        var nombre = document.getElementById('inputNombre').value;
+        var precio = document.getElementById('inputPrecio').value;
+        var descripcion = document.getElementById('inputDescripcion').value;
+        var categoria = document.getElementById('inputCategoria').value;
+        var prod = {
+          nombre: nombre,
+          precio: precio,
+          descripcion: descripcion,
+          categoria: categoria
+        };
+        (0, _conexionAPI.addProducto)(prod, function (datos) {
+          console.log(datos);
+
+          if (datos == 'ok') {
+            document.getElementById('principal').innerHTML = _pintarHTML.pintarPlantilla;
+            plantillaPintando();
+            document.getElementById('principalVista').insertAdjacentHTML('afterbegin', '<div id="checkEsto" class="alert alert-info alert-dismissible fade show" role="alert">Producto creado con éxito</div>');
+          }
+
+          if (datos == 'no ok') {
+            var ch = document.getElementById('checkEsto');
+            if (!ch) document.getElementById('principalVista').insertAdjacentHTML('afterbegin', '<div id="checkEsto" class="alert alert-danger alert-dismissible fade show" role="alert">Error, vuelve a crear el producto</div>');
+          }
+        });
       });
     });
   }); //Aquí meto los productos
@@ -445,7 +579,8 @@ function plantillaPintando() {
       })();
     }
   });
-}
+} //Funcion que pinta el login inicial
+
 
 function loginPintando() {
   document.getElementById('principal').innerHTML = (0, _pintarHTML.pintarLogin)();
@@ -454,7 +589,7 @@ function loginPintando() {
     var pass = document.getElementById('inputPassword').value;
     var text = (0, _conexionAPI.login)(usu, pass, function (datos) {
       if (datos.err) {
-        document.getElementById('loginDiv').insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible fade show" role="alert">' + datos.text + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+        document.getElementById('loginDiv').insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible fade show" role="alert">' + datos.text + '</div>');
       } else {
         //console.log(datos);
         localStorage.setItem('token', datos);
@@ -464,10 +599,11 @@ function loginPintando() {
       }
     });
   });
-}
+} //Llamada inicial para que se pinte el login al principio
+
 
 loginPintando();
-},{"./pintarHTML.js":"pintarHTML.js","./conexionAPI.js":"conexionAPI.js"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./pintarHTML.js":"pintarHTML.js","./conexionAPI.js":"conexionAPI.js","dns":"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/_empty.js"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -494,7 +630,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38805" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38891" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

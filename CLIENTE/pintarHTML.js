@@ -1,5 +1,9 @@
 var fs = require("fs");
 
+//Todas las funciones leen diferentes archivos html que sirven de plantilla,
+//y devuelven estos archivos en un string para insertarlos 
+
+
 function pintarLogin(){
     var text = fs.readFileSync('htmls/login.html', 'utf8');
     return text;
@@ -27,3 +31,17 @@ function pintarCrearProducto(){
 }
 
 export {pintarCrearProducto};
+
+function pintarModificarProducto(){
+    var text = fs.readFileSync('htmls/modificarProducto.html', 'utf8');
+    return text;
+}
+
+export {pintarModificarProducto};
+
+function pintarlistaProductos(){
+    var text = fs.readFileSync('htmls/listaProductos.html', 'utf8');
+    return text;
+}
+
+export {pintarlistaProductos};
